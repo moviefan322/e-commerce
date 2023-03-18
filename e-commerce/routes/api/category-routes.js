@@ -6,7 +6,7 @@ const { Category, Product } = require("../../models");
 router.get("/", async (req, res) => {
   try {
     const CateogryData = await Category.findAll({
-      include: [{model: Product}],
+      include: [{ model: Product }],
     });
     res.status(200).json(CateogryData);
   } catch (err) {
@@ -46,8 +46,19 @@ router.put("/:id", (req, res) => {
   // update a category by its `id` value
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res) => {
   // delete a category by its `id` value
+  try {
+    const CategoryData = await Category.findByPk(req.params.id, {
+      include: [Product],
+    });
+    if (!CategoryData) {
+      res.status(404).json({ message: "That ID does not exist" });
+    }
+    res.status(200).json(CategoryData);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 module.exports = router;
