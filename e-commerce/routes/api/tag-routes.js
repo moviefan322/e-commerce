@@ -88,11 +88,13 @@ router.put("/:id", (req, res) => {
 router.delete("/:id", async (req, res) => {
   // delete one tag by its `id` value
   try {
-    const TagData = await Tag.findByPk(req.params.id);
+    const TagData = await Tag.destroy({
+      where: { id: req.params.id },
+    });
     if (!TagData) {
       res.status(404).json({ message: "That ID does not exist" });
     }
-    res.status(200).json(TagData);
+    res.status(200).json({ message: "Tag Deleted!" });
   } catch (err) {
     res.status(500).json(err);
   }
